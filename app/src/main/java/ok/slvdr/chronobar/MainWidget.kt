@@ -3,11 +3,13 @@ package ok.slvdr.chronobar
 import android.appwidget.AppWidgetManager
 import android.appwidget.AppWidgetProvider
 import android.content.Context
-import android.util.Log
-import android.view.View
 import android.widget.RemoteViews
+import androidx.core.content.ContextCompat
+import java.time.Duration
 import java.time.LocalDate
 import java.time.LocalDateTime
+import java.time.temporal.TemporalAdjuster
+import java.time.temporal.TemporalAdjusters
 import java.util.logging.Level
 import java.util.logging.Logger
 
@@ -55,17 +57,42 @@ internal fun updateAppWidget(
     // Construct the RemoteViews object
     val views = RemoteViews(context.packageName, R.layout.main_widget)
 
-    // Update the percentage
+    // Update the bars
+    updateYearBar(context, views)
+    updateMonthBar(context, views)
 
-    val currentDate: LocalDateTime = LocalDateTime.now()
-    val percentageYear: Int = (currentDate.dayOfYear) * 100 / LocalDate.now().lengthOfYear()
-
-    Logger.getGlobal().log(Level.INFO,"Porcentaje: $percentageYear")
-
-
-    views.setProgressBar(R.id.yearBar,100,percentageYear,false)
-    views.setTextViewText(R.id.textYear, "Año: $percentageYear%")
 
     // Instruct the widget manager to update the widget
     appWidgetManager.updateAppWidget(appWidgetId, views)
+}
+
+private fun updateYearBar(context: Context, views: RemoteViews) {
+    val yearPercentage = calcYearPercentage()
+    val textYear = ContextCompat.getString(context, R.string.year)
+    views.setProgressBar(R.id.yearBar, 100, yearPercentage, false)
+    views.setTextViewText(R.id.textYear, "$textYear: $yearPercentage%")
+}
+
+private fun updateMonthBar(context: Context, views: RemoteViews) {
+    val monthPercentage = calcMonthPercentage()
+    val textMonth = ContextCompat.getString(context, R.string.month)
+    views.setProgressBar(R.id.monthBar, 100, monthPercentage.toInt(), false)
+    views.setTextViewText(R.id.textMonth, "$textMonth: $monthPercentage%")
+}
+
+
+
+internal fun calcYearPercentage(): Int {
+    return (LocalDateTime.now().dayOfYear) * 100 / LocalDate.now().lengthOfYear()
+}
+
+internal  fun calcMonthPercentage(): Long {
+    // Create a LocalDateTime object that is exactly 00:00 at the start of the current month
+    val nextMonthLocalDateTime = LocalDateTime.now().with(TemporalAdjusters.firstDayOfMonth())
+                                                    .withHour(0)
+                                                    .withMinute(0)
+                                                    .withSecond(0)
+                                                    .withNano(0)
+    // Divide the hours that have passed since the start of the month over the total month hours (rule of 3)
+    return Duration.between(nextMonthLocalDateTime, LocalDateTime.now()).toHours() * 100 / (LocalDate.now().lengthOfMonth() * 24)
 }
