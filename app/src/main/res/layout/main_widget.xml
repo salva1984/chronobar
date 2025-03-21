@@ -1,0 +1,50 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/Widget.ChronoBar.AppWidget.Container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:theme="@style/Theme.ChronoBar.AppWidgetContainer">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_centerInParent="true"
+        android:background="@drawable/main_widget_background"
+        android:gravity="center|left"
+        android:orientation="vertical"
+        android:padding="0dp"
+        tools:ignore="RtlHardcoded">
+
+        <!-- Barra de progreso -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ProgressBar
+                android:id="@+id/yearBar"
+                style="@android:style/Widget.ProgressBar.Horizontal"
+                android:layout_width="124dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="0dp"
+                android:gravity="center|left"
+                android:max="100"
+                android:progress="50"
+                android:progressDrawable="@drawable/plain_bar" />
+
+            <TextView
+                android:id="@+id/textYear"
+                android:layout_width="match_parent"
+
+                android:layout_height="match_parent"
+                android:fontFamily="monospace"
+                android:gravity="center"
+                android:text="Año: "
+                android:textColor="#000000" />
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+</RelativeLayout>
