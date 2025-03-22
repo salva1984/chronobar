@@ -80,6 +80,12 @@ private fun updateMonthBar(context: Context, views: RemoteViews) {
     views.setTextViewText(R.id.textMonth, "$textMonth: $monthPercentage%")
 }
 
+private fun updateDayBar(context: Context, views: RemoteViews) {
+    val textDay = ContextCompat.getString(context,R.string.day)
+    views.setProgressBar(R.id.dayBar,100,calcDayPercentage().toInt(),false)
+    views.setTextViewText(R.id.textDay,"$textDay: ${calcDayPercentage().toInt()}%")
+}
+
 
 
 internal fun calcYearPercentage(): Int {
@@ -95,4 +101,15 @@ internal  fun calcMonthPercentage(): Long {
                                                     .withNano(0)
     // Divide the hours that have passed since the start of the month over the total month hours (rule of 3)
     return Duration.between(nextMonthLocalDateTime, LocalDateTime.now()).toHours() * 100 / (LocalDate.now().lengthOfMonth() * 24)
+}
+
+internal fun calcDayPercentage(): Long {
+    val startOfToday = LocalDateTime.now()
+        .withHour(0)
+        .withMinute(0)
+        .withSecond(0)
+        .withNano(0)
+
+    // Percentage of minutes since the start of today.
+    return Duration.between(startOfToday,LocalDateTime.now()).toMinutes() * 100 / (1440)
 }

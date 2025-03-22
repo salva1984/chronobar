@@ -2,4 +2,5 @@
 <resources>
     <string name="year">Año</string>
     <string name="month">Mes</string>
+    <string name="day">Dia</string>
 </resources>
