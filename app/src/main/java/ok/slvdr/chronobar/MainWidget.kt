@@ -8,7 +8,6 @@ import androidx.core.content.ContextCompat
 import java.time.Duration
 import java.time.LocalDate
 import java.time.LocalDateTime
-import java.time.temporal.TemporalAdjuster
 import java.time.temporal.TemporalAdjusters
 import java.util.logging.Level
 import java.util.logging.Logger
@@ -60,6 +59,7 @@ internal fun updateAppWidget(
     // Update the bars
     updateYearBar(context, views)
     updateMonthBar(context, views)
+    updateDayBar(context, views)
 
 
     // Instruct the widget manager to update the widget
