@@ -5,9 +5,11 @@ import android.appwidget.AppWidgetProvider
 import android.content.Context
 import android.widget.RemoteViews
 import androidx.core.content.ContextCompat
+import java.time.DayOfWeek
 import java.time.Duration
 import java.time.LocalDate
 import java.time.LocalDateTime
+import java.time.temporal.Temporal
 import java.time.temporal.TemporalAdjusters
 import java.util.logging.Level
 import java.util.logging.Logger
@@ -25,11 +27,8 @@ class MainWidget : AppWidgetProvider() {
         // There may be multiple widgets active, so update all of them
         for (appWidgetId in appWidgetIds) {
             updateAppWidget(context, appWidgetManager, appWidgetId)
-            Logger.getGlobal().log(Level.INFO,"on Update called.")
+            Logger.getGlobal().log(Level.INFO, "on Update called.")
         }
-
-
-
 
 
     }
@@ -60,6 +59,7 @@ internal fun updateAppWidget(
     updateYearBar(context, views)
     updateMonthBar(context, views)
     updateDayBar(context, views)
+    updateWeekBar(context,views)
 
 
     // Instruct the widget manager to update the widget
@@ -81,26 +81,31 @@ private fun updateMonthBar(context: Context, views: RemoteViews) {
 }
 
 private fun updateDayBar(context: Context, views: RemoteViews) {
-    val textDay = ContextCompat.getString(context,R.string.day)
-    views.setProgressBar(R.id.dayBar,100,calcDayPercentage().toInt(),false)
-    views.setTextViewText(R.id.textDay,"$textDay: ${calcDayPercentage().toInt()}%")
+    val textDay = ContextCompat.getString(context, R.string.day)
+    views.setProgressBar(R.id.dayBar, 100, calcDayPercentage().toInt(), false)
+    views.setTextViewText(R.id.textDay, "$textDay: ${calcDayPercentage().toInt()}%")
 }
 
-
+private fun updateWeekBar(context: Context, views: RemoteViews) {
+    val textWeek = ContextCompat.getString(context, R.string.week)
+    views.setProgressBar(R.id.weekBar,100, calcWeekPercentage().toInt(),false)
+    views.setTextViewText(R.id.textWeek, "$textWeek: ${calcWeekPercentage().toInt()}%")
+}
 
 internal fun calcYearPercentage(): Int {
     return (LocalDateTime.now().dayOfYear) * 100 / LocalDate.now().lengthOfYear()
 }
 
-internal  fun calcMonthPercentage(): Long {
+internal fun calcMonthPercentage(): Long {
     // Create a LocalDateTime object that is exactly 00:00 at the start of the current month
     val nextMonthLocalDateTime = LocalDateTime.now().with(TemporalAdjusters.firstDayOfMonth())
-                                                    .withHour(0)
-                                                    .withMinute(0)
-                                                    .withSecond(0)
-                                                    .withNano(0)
+        .withHour(0)
+        .withMinute(0)
+        .withSecond(0)
+        .withNano(0)
     // Divide the hours that have passed since the start of the month over the total month hours (rule of 3)
-    return Duration.between(nextMonthLocalDateTime, LocalDateTime.now()).toHours() * 100 / (LocalDate.now().lengthOfMonth() * 24)
+    return Duration.between(nextMonthLocalDateTime, LocalDateTime.now())
+        .toHours() * 100 / (LocalDate.now().lengthOfMonth() * 24)
 }
 
 internal fun calcDayPercentage(): Long {
@@ -111,5 +116,16 @@ internal fun calcDayPercentage(): Long {
         .withNano(0)
 
     // Percentage of minutes since the start of today.
-    return Duration.between(startOfToday,LocalDateTime.now()).toMinutes() * 100 / (1440)
+    return Duration.between(startOfToday, LocalDateTime.now()).toMinutes() * 100 / (1440)
+}
+
+internal fun calcWeekPercentage(): Long {
+    val startOfWeek = LocalDateTime.now().with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY))
+        .withHour(0)
+        .withMinute(0)
+        .withSecond(0)
+        .withNano(0)
+
+    return Duration.between(startOfWeek, LocalDateTime.now()).toMinutes() * 100 / 10080
+
 }

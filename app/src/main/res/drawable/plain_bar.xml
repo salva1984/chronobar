@@ -1,10 +1,23 @@
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <item android:id="@android:id/background">
+        <shape android:shape="rectangle">
+            <solid android:color="#88898a"/> <!-- Color del fondo -->
+            <corners
+                android:topLeftRadius="8dp"
+                android:bottomLeftRadius="8dp"
+                android:topRightRadius="8dp"
+                android:bottomRightRadius="8dp"
+                />
+        </shape>
+    </item>
+
+
     <!-- Progreso principal (plano y responsivo) -->
     <item android:id="@android:id/progress">
         <clip
             android:clipOrientation="horizontal"
-            android:drawable="@drawable/bar_background"
+
             android:gravity="left">
             <shape android:shape="rectangle">
                 <solid android:color="#000000" />
