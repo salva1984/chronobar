@@ -4,4 +4,9 @@
     <string name="month">Mes</string>
     <string name="day">Día</string>
     <string name="week">Semana</string>
+    <string name="yearBar">Barra de año</string>
+    <string name="monthBar">Barra de mes</string>
+    <string name="weekBar">Barra de semana</string>
+    <string name="dayBar">Barra de dia</string>
+    <string name="addCustomDate">Añadir fecha personalizada</string>
 </resources>
